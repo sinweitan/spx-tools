@@ -71,14 +71,11 @@
     ws["!cols"] = colWidths;
 
     // STEP 6: set all row heights to ~60px
-    // 60px ~ 45pt, but SheetJS supports direct pixel height via hpx
     ws["!rows"] = new Array(newData.length)
         .fill(null)
         .map(() => ({ hpx: 60 }));
 
-    // STEP 7: add borders to all cells (and center vertically + wrap text)
-    // Note: full styling support depends on Excel + SheetJS; if some
-    // apps ignore borders, the data is still all there.
+    // STEP 7: add borders to all cells + vertical center + wrap
     if (ws["!ref"]) {
         const range = XLSX.utils.decode_range(ws["!ref"]);
         for (let R = range.s.r; R <= range.e.r; ++R) {
