@@ -40,16 +40,24 @@
 
     const ws = XLSX.utils.aoa_to_sheet(finalData);
 
-    // Auto column width
+    // Auto column width (except first 2)
     const colCount = finalData[0].length;
-    ws["!cols"] = new Array(colCount).fill(null).map((_, i) => {
-        let max = 10;
-        for (let r = 0; r < finalData.length; r++) {
-            let val = finalData[r][i];
-            if (val) max = Math.max(max, String(val).length + 2);
+    ws["!cols"] = [];
+
+    for (let i = 0; i < colCount; i++) {
+        if (i < 2) {
+            ws["!cols"].push({ wch: 12 });  // Fixed width for Code/Z but adjustable
+        } else {
+            let max = 10;
+            for (let r = 0; r < finalData.length; r++) {
+                const val = finalData[r][i];
+                if (val !== undefined && val !== null) {
+                    max = Math.max(max, String(val).length + 2);
+                }
+            }
+            ws["!cols"].push({ wch: max });
         }
-        return { wch: max };
-    });
+    }
 
     // Row height 60px
     ws["!rows"] = new Array(finalData.length)
